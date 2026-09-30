@@ -1,8 +1,10 @@
 import pygame
 import config
+from imagens import carregar
 
 def criar_jogador():
-    jogador = pygame.FRect(config.LARGURA // 2 - 20, config.ALTURA // 2 - 20, 40, 40)
+    imagem = carregar("wizzard_m_idle_anim_f0")
+    jogador = imagem.get_frect(center=(config.LARGURA // 2, config.ALTURA // 2))
     return jogador
 
 def mover_jogador(jogador, dt, teclas):
@@ -17,4 +19,5 @@ def mover_jogador(jogador, dt, teclas):
     jogador.clamp_ip(pygame.Rect(0, 0, config.LARGURA, config.ALTURA))
 
 def desenhar_jogador(tela, jogador):
-    pygame.draw.rect(tela, (255, 255, 255), jogador)
+    imagem = carregar("wizzard_m_idle_anim_f0")
+    tela.blit(imagem, jogador)

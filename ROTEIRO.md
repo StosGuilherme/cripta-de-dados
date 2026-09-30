@@ -99,7 +99,7 @@ Se o tempo apertar, ela já é entregável.
 
 ## Passo 3: imagens
 
-**Arquivos:** `imagens.py` (novo), `jogador.py`, `config.py`, `main.py`
+**Arquivos:** `imagens.py` (novo), `jogador.py`, `config.py`, `main.py`, `telas.py` (novo, só se fizer o chão)
 
 1. No `config.py`, adicione `ESCALA = 3`. Os sprites são pequenos (16 pixels) e vão ser aumentados 3 vezes.
 2. Crie o `imagens.py` com a função `carregar(nome)`:
@@ -109,7 +109,12 @@ Se o tempo apertar, ela já é entregável.
 3. No `jogador.py`:
    - `criar_jogador()` agora pega a imagem com `carregar("wizzard_m_idle_anim_f0")` e devolve `imagem.get_frect(center=...)`, com o centro da tela. O retângulo fica do tamanho da imagem;
    - `desenhar_jogador` troca o `draw.rect` por `tela.blit(imagem, jogador)`.
-4. **(Opcional) Chão:** antes do `while`, crie uma `pygame.Surface` do tamanho da tela e preencha com a imagem `floor_1`, usando dois `for` (x e y andando de 48 em 48, que é 16 × 3). No loop, desenhe essa Surface no lugar do `tela.fill`.
+4. **(Opcional) Chão:** crie o `telas.py` (o arquivo de tudo que desenha a tela, fora os personagens) com a função `montar_chao()`:
+   - crie uma `pygame.Surface` do tamanho da tela;
+   - preencha com a imagem `floor_1` usando dois `for`, com x e y andando de 48 em 48 (16 × 3);
+   - devolva a Surface.
+
+   No `main.py`, chame `montar_chao()` uma vez antes do `while` (depois do `set_mode`) e guarde o resultado. No loop, desenhe essa Surface na posição (0, 0) no lugar do `tela.fill`.
 
 **Pronto quando:** o mago aparece e anda.
 
@@ -140,13 +145,13 @@ Se o tempo apertar, ela já é entregável.
 
 ## Passo 5: colisão, vida e derrota
 
-**Arquivos:** `telas.py` (novo), `config.py`, `main.py`
+**Arquivos:** `telas.py` (novo, se ainda não existir), `config.py`, `main.py`
 
 1. No `config.py`: `JOGADOR_VIDA = 100`, `DANO_INIMIGO = 10`, `TEMPO_INVULNERAVEL = 1.0` e `FONTE = "assets/fontes/PressStart2P-Regular.ttf"`.
 2. **Organize a partida:** no `main.py`, crie a função `nova_partida()`, que devolve um dicionário com tudo que muda durante o jogo: `"jogador"`, `"inimigos"`, `"proximo_inimigo"`, `"vida"` e `"invulneravel"` (começa em 0). Troque as variáveis soltas por `partida["..."]`.
    Para recomeçar o jogo depois, basta chamar `nova_partida()` de novo.
 3. **Colisão:** a cada quadro, diminua `invulneravel` em `dt`. Para cada inimigo, se `jogador.colliderect(inimigo)` e `invulneravel <= 0`, a vida perde o dano e `invulneravel` volta para `TEMPO_INVULNERAVEL`.
-4. Crie o `telas.py` com a função `escrever(tela, texto, tamanho, cor, centro)`:
+4. No `telas.py` (crie se ainda não existir), faça a função `escrever(tela, texto, tamanho, cor, centro)`:
    - `pygame.font.Font(config.FONTE, tamanho)` cria a fonte (use um cache em dicionário, como nas imagens);
    - `fonte.render(texto, True, cor)` gera uma imagem do texto;
    - posicione com `get_rect(center=centro)` e faça o `blit`.
