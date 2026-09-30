@@ -18,12 +18,13 @@ estado = "jogando"
 
 
 def nova_partida():
-    global jogador, INIMIGOS, proximo_inimigo, vida_jogador, invencivel
+    global jogador, INIMIGOS, proximo_inimigo, vida_jogador, invencivel, tempo
     jogador = criar_jogador()
     INIMIGOS = []
     proximo_inimigo = 0
     vida_jogador = config.JOGADOR_VIDA
     invencivel = 0
+    tempo = 0 
 
 
 nova_partida()
@@ -34,6 +35,9 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
     if estado == "jogando":
+        tempo += dt
+        if tempo >= config.TEMPO_VITORIA:
+            estado = "VITÓRIA"
         mover_jogador(jogador, dt, pygame.key.get_pressed())
         proximo_inimigo -= dt
         if proximo_inimigo <= 0:
@@ -52,9 +56,11 @@ while rodando:
     for inimigo in INIMIGOS:
         desenhar_inimigo(tela, inimigo)
     desenhar_jogador(tela, jogador)
-    desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS})
+    desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
     if estado == "FIM DE JOGO":
         escrever(tela, "FIM DE JOGO", 64, (255, 0, 0), (config.LARGURA // 2, config.ALTURA // 2))
+    if estado == "VITÓRIA":
+        escrever(tela, "VOCE VENCEU!", 64, (0, 255, 0), (config.LARGURA // 2, config.ALTURA // 2))
     pygame.display.flip()
 
 pygame.quit()

@@ -19,3 +19,5 @@ def escrever (tela, texto, tamanho, cor, centro):
 def desenha_hud (tela, partida):
     escrever(tela, f"Vida: {partida['vida']}", 24, (255, 255, 255), (140, 20))
     escrever(tela, f"Inimigos: {len(partida['inimigos'])}", 24, (255, 255, 255), (170, 50))
+    div, mod = divmod(partida['tempo'], 60)
+    escrever(tela, f"Tempo: {int(div)}:{int(mod):02d}", 24, (255, 255, 255), (160, 80))
