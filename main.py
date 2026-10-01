@@ -87,11 +87,11 @@ while rodando:
         desenhar_jogador(tela, jogador)
         desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
         if estado == "FIM DE JOGO":
-            desenha_modal(tela, "FIM DE JOGO", (255, 0, 0), "GAME OVER", "ENTER - Jogar de novo", "ESC - Sair")
+            desenha_modal(tela, "FIM DE JOGO", (255, 0, 0), "ENTER - Jogar de novo", "ESC - Menu")
         if estado == "pausa":
             desenha_modal(tela, "PAUSADO", (255, 255, 0), "ESC - Retomar", "ENTER - Menu")
         if estado == "VITÓRIA":
-            desenha_modal(tela, "VITORIA!", (0, 255, 0), "ENTER - Jogar de novo", "ESC - Sair")
+            desenha_modal(tela, "VITORIA!", (0, 255, 0), "ENTER - Jogar de novo", "ESC - Menu")
     pygame.display.flip()
 
 pygame.quit()
