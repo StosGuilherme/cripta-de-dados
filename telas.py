@@ -25,7 +25,7 @@ def desenha_hud (tela, partida):
     escrever(tela, f"Tempo: {int(div)}:{int(mod):02d}", 24, (255, 255, 255), (160, 80))
     
 def desenha_menu(tela):
-    caixa = desenha_caixa(tela, 760, 420, (config.LARGURA // 2, 400))
+    caixa = desenha_caixa(tela, 760, 490, (config.LARGURA // 2, 420))
     escrever(tela, "CRIPTA DE DADOS", 64, (255, 255, 255), (config.LARGURA // 2, 110))
     escrever(tela, "ENTER - JOGAR", 32, (255, 255, 255), (caixa.centerx, caixa.y + 50))
     escrever(tela, "ESC - SAIR", 32, (255, 255, 255), (caixa.centerx, caixa.y + 100))
@@ -36,6 +36,8 @@ def desenha_menu(tela):
     escrever(tela, "A - MOVER PARA ESQUERDA", 24, (255, 255, 255), (caixa.centerx, caixa.y + 305))
     escrever(tela, "D - MOVER PARA DIREITA", 24, (255, 255, 255), (caixa.centerx, caixa.y + 340))
     escrever(tela, "ESC - PAUSAR", 24, (255, 255, 255), (caixa.centerx, caixa.y + 375))
+    escrever(tela, "MOUSE - MIRAR", 24, (255, 255, 255), (caixa.centerx, caixa.y + 410))
+    escrever(tela, "BOTAO ESQUERDO - ATIRAR", 24, (255, 255, 255), (caixa.centerx, caixa.y + 445))
      
 def desenha_modal(tela, titulo, cor_titulo, linha1, linha2):
     caixa = desenha_caixa (tela, 720, 260, (config.LARGURA // 2, config.ALTURA // 2))    

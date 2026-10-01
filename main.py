@@ -3,6 +3,7 @@ import config
 from jogador import criar_jogador, mover_jogador, desenhar_jogador
 from telas import desenha_hud, escrever, montar_chao, desenha_menu, desenha_modal
 from inimigos import criar_inimigo, mover_inimigo, desenhar_inimigo
+from tiros import criar_tiro, mover_tiros, desenhar_tiros
 
 pygame.init()
 
@@ -18,9 +19,11 @@ estado = "menu"
 
 
 def nova_partida():
-    global jogador, INIMIGOS, proximo_inimigo, vida_jogador, invencivel, tempo
+    global jogador, INIMIGOS, tiros, recarga, proximo_inimigo, vida_jogador, invencivel, tempo
     jogador = criar_jogador()
     INIMIGOS = []
+    tiros = []
+    recarga = 0
     proximo_inimigo = 0
     vida_jogador = config.JOGADOR_VIDA
     invencivel = 0
@@ -64,6 +67,11 @@ while rodando:
         if tempo >= config.TEMPO_VITORIA:
             estado = "VITÓRIA"
         mover_jogador(jogador, dt, pygame.key.get_pressed())
+        recarga -= dt
+        if pygame.mouse.get_pressed()[0] and recarga <= 0:
+            tiros.append(criar_tiro(jogador.center, pygame.mouse.get_pos()))
+            recarga = config.TIRO_RECARGA
+        mover_tiros(tiros, dt)
         proximo_inimigo -= dt
         if proximo_inimigo <= 0:
             INIMIGOS.append(criar_inimigo())
@@ -85,6 +93,7 @@ while rodando:
         for inimigo in INIMIGOS:
             desenhar_inimigo(tela, inimigo)
         desenhar_jogador(tela, jogador)
+        desenhar_tiros(tela, tiros)
         desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
         if estado == "FIM DE JOGO":
             desenha_modal(tela, "FIM DE JOGO", (255, 0, 0), "ENTER - Jogar de novo", "ESC - Menu")
