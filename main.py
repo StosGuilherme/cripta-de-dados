@@ -1,7 +1,7 @@
 import pygame
 import config
 from jogador import criar_jogador, mover_jogador, desenhar_jogador
-from telas import desenha_hud, escrever, montar_chao
+from telas import desenha_hud, escrever, montar_chao, desenha_menu, desenha_modal
 from inimigos import criar_inimigo, mover_inimigo, desenhar_inimigo
 
 pygame.init()
@@ -13,7 +13,7 @@ chao = montar_chao()
 relogio = pygame.time.Clock()
 rodando = True
 
-estado = "jogando"
+estado = "menu"
 
 
 
@@ -31,9 +31,34 @@ nova_partida()
 
 while rodando:
     dt = relogio.tick(config.FPS) / 1000
+
+    # ---------- EVENTOS ----------
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
+        if evento.type == pygame.KEYDOWN:
+            if estado == "menu":
+                if evento.key == pygame.K_RETURN:
+                    estado = "jogando"
+                    nova_partida()
+                elif evento.key == pygame.K_ESCAPE:
+                    rodando = False
+            elif estado == "jogando":
+                if evento.key == pygame.K_ESCAPE:
+                    estado = "pausa"
+            elif estado == "pausa":
+                if evento.key == pygame.K_ESCAPE:
+                    estado = "jogando"
+                if evento.key == pygame.K_RETURN:
+                    estado = "menu"
+            elif estado in ["FIM DE JOGO", "VITÓRIA"]:
+                if evento.key == pygame.K_RETURN:
+                    estado = "jogando"
+                    nova_partida()
+                elif evento.key == pygame.K_ESCAPE:
+                    estado = "menu"
+
+    # ---------- ATUALIZAR ----------
     if estado == "jogando":
         tempo += dt
         if tempo >= config.TEMPO_VITORIA:
@@ -51,16 +76,22 @@ while rodando:
                 invencivel = config.TEMPO_INVENCIVEL
         if vida_jogador <= 0:
             estado = "FIM DE JOGO"
-            
+
+    # ---------- DESENHAR ----------
     tela.blit(chao, (0, 0))
-    for inimigo in INIMIGOS:
-        desenhar_inimigo(tela, inimigo)
-    desenhar_jogador(tela, jogador)
-    desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
-    if estado == "FIM DE JOGO":
-        escrever(tela, "FIM DE JOGO", 64, (255, 0, 0), (config.LARGURA // 2, config.ALTURA // 2))
-    if estado == "VITÓRIA":
-        escrever(tela, "VOCE VENCEU!", 64, (0, 255, 0), (config.LARGURA // 2, config.ALTURA // 2))
+    if estado == "menu":
+        desenha_menu(tela)
+    else:
+        for inimigo in INIMIGOS:
+            desenhar_inimigo(tela, inimigo)
+        desenhar_jogador(tela, jogador)
+        desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
+        if estado == "FIM DE JOGO":
+            desenha_modal(tela, "FIM DE JOGO", (255, 0, 0), "GAME OVER", "ENTER - Jogar de novo", "ESC - Sair")
+        if estado == "pausa":
+            desenha_modal(tela, "PAUSADO", (255, 255, 0), "ESC - Retomar", "ENTER - Menu")
+        if estado == "VITÓRIA":
+            desenha_modal(tela, "VITORIA!", (0, 255, 0), "ENTER - Jogar de novo", "ESC - Sair")
     pygame.display.flip()
 
 pygame.quit()
