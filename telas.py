@@ -23,7 +23,8 @@ def desenha_hud (tela, partida):
     escrever(tela, f"Inimigos: {len(partida['inimigos'])}", 24, (255, 255, 255), (170, 50))
     div, mod = divmod(partida['tempo'], 60)
     escrever(tela, f"Tempo: {int(div)}:{int(mod):02d}", 24, (255, 255, 255), (160, 80))
-    
+    escrever(tela, f"Abates: {partida['abates']}", 24, (255, 255, 255), (160, 110))
+
 def desenha_menu(tela):
     caixa = desenha_caixa(tela, 760, 490, (config.LARGURA // 2, 420))
     escrever(tela, "CRIPTA DE DADOS", 64, (255, 255, 255), (config.LARGURA // 2, 110))

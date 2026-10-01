@@ -19,7 +19,7 @@ estado = "menu"
 
 
 def nova_partida():
-    global jogador, INIMIGOS, tiros, recarga, proximo_inimigo, vida_jogador, invencivel, tempo
+    global jogador, INIMIGOS, tiros, recarga, proximo_inimigo, vida_jogador, invencivel, tempo, abates
     jogador = criar_jogador()
     INIMIGOS = []
     tiros = []
@@ -28,6 +28,7 @@ def nova_partida():
     vida_jogador = config.JOGADOR_VIDA
     invencivel = 0
     tempo = 0 
+    abates = 0
 
 
 nova_partida()
@@ -75,8 +76,15 @@ while rodando:
         proximo_inimigo -= dt
         if proximo_inimigo <= 0:
             INIMIGOS.append(criar_inimigo())
-            proximo_inimigo = config.INTERVALO_INIMIGO
+            proximo_inimigo = max(config.INTERVALO_MINIMO, config.INTERVALO_INIMIGO - tempo * config.QUEDA_INTERVALO)
         invencivel -= dt
+        for tiro in tiros[:]:
+            for inimigo in INIMIGOS[:]:
+                if tiro["rect"].colliderect(inimigo):
+                    tiros.remove(tiro)
+                    INIMIGOS.remove(inimigo)
+                    abates += 1
+                    break
         for inimigo in INIMIGOS:
             mover_inimigo(inimigo, dt, jogador)
             if inimigo.colliderect(jogador) and invencivel <= 0:
@@ -94,7 +102,7 @@ while rodando:
             desenhar_inimigo(tela, inimigo)
         desenhar_jogador(tela, jogador)
         desenhar_tiros(tela, tiros)
-        desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo})
+        desenha_hud(tela, {"vida": vida_jogador, "inimigos": INIMIGOS, "tempo": tempo, "abates": abates})
         if estado == "FIM DE JOGO":
             desenha_modal(tela, "FIM DE JOGO", (255, 0, 0), "ENTER - Jogar de novo", "ESC - Menu")
         if estado == "pausa":
