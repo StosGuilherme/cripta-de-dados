@@ -24,10 +24,18 @@ def desenha_hud (tela, partida):
     div, mod = divmod(partida['tempo'], 60)
     escrever(tela, f"Tempo: {int(div)}:{int(mod):02d}", 24, (255, 255, 255), (160, 80))
     escrever(tela, f"Abates: {partida['abates']}", 24, (255, 255, 255), (160, 110))
+    
+def escrever_com_borda(tela, texto, tamanho, cor, centro):
+    x, y = centro
+    deslocamentos = [(-3, 0), (3, 0), (0, -3), (0, 3), (-3, -3), (3, -3), (-3, 3), (3, 3)]
+    for dx, dy in deslocamentos:
+        escrever(tela, texto, tamanho, (0, 0, 0), (x + dx, y + dy))  
+    escrever(tela, texto, tamanho, cor, (x, y))                     
 
 def desenha_menu(tela):
     caixa = desenha_caixa(tela, 760, 490, (config.LARGURA // 2, 420))
-    escrever(tela, "CRIPTA DE DADOS", 64, (255, 255, 255), (config.LARGURA // 2, 110))
+    escrever_com_borda(tela, "CRIPTA DE DADOS", 64, (255, 255, 255), (config.LARGURA // 2, 110))
+    escrever_com_borda(tela, f"SOBREVIVA POR {config.TEMPO_VITORIA} SEGUNDOS!", 24, (240, 200, 80), (config.LARGURA // 2, 140))
     escrever(tela, "ENTER - JOGAR", 32, (255, 255, 255), (caixa.centerx, caixa.y + 50))
     escrever(tela, "ESC - SAIR", 32, (255, 255, 255), (caixa.centerx, caixa.y + 100))
 
