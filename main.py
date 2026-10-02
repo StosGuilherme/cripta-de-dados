@@ -1,3 +1,13 @@
+import os
+import sys
+
+# faz os caminhos "assets/..." funcionarem de qualquer lugar:
+# o jogo passa a trabalhar na pasta onde ele está
+if getattr(sys, "frozen", False):                          
+    os.chdir(os.path.dirname(sys.executable))              
+else:
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))   
+
 import pygame
 import config
 from jogador import criar_jogador, mover_jogador, desenhar_jogador
@@ -36,7 +46,7 @@ nova_partida()
 while rodando:
     dt = relogio.tick(config.FPS) / 1000
 
-    # ---------- EVENTOS ----------
+
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             rodando = False
@@ -62,7 +72,7 @@ while rodando:
                 elif evento.key == pygame.K_ESCAPE:
                     estado = "menu"
 
-    # ---------- ATUALIZAR ----------
+
     if estado == "jogando":
         tempo += dt
         if tempo >= config.TEMPO_VITORIA:
@@ -93,7 +103,7 @@ while rodando:
         if vida_jogador <= 0:
             estado = "FIM DE JOGO"
 
-    # ---------- DESENHAR ----------
+
     tela.blit(chao, (0, 0))
     if estado == "menu":
         desenha_menu(tela)
